@@ -10,7 +10,7 @@ const Card = ({ title, description, status, priority, color  }) => {
   
   return (
     <>
-      <div className={`bg-gray-100 text-black p-4 rounded-lg shadow-md space-y-2 ${colorClasses[color] || 'bg-white'}`} >
+            <div className={`bg-gray-100 text-black p-4 rounded-lg shadow-md space-y-2 ${colorClasses[color] || 'bg-white'}`} >
         <h3 className="text-lg font-semibold text-purple-700">{title}</h3>
         <p className="text-sm text-gray-700">{description}</p>
         <div className="flex justify-between text-sm mt-2">

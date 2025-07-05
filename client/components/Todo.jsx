@@ -12,7 +12,7 @@ const Todo = ({ socket }) => {
         priority: ''
         // AssignedUser: '',
     });
-        
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setTodoData(prev => ({
@@ -23,50 +23,47 @@ const Todo = ({ socket }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-      
+
         const localToken = localStorage.getItem("token");
         // console.log("🧾 Token during submit:", localToken);
-      
+
         if (!localToken) {
-          alert("❌ Please login again.");
-          return;
+            alert("❌ Please login again.");
+            return;
         }
-      
+
         try {
-          const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/addtodolist`, todoData, {
-            headers: {
-              Authorization: `Bearer ${localToken}`,
-            },
-            withCredentials: true,
-          });
-      
-          if (socket) {
-            socket.emit('new-todo', res.data);
-          }
-      
-          // ✅ Reset todo fields
-          setTodoData({
-            title: '',
-            description: '',
-            status: '',
-            priority: ''
-          });
-      
-          setIsModalOpen(false);
-      
+            const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/addtodolist`, todoData, {
+                headers: {
+                    Authorization: `Bearer ${localToken}`,
+                },
+                withCredentials: true,
+            });
+
+            if (socket) {
+                socket.emit('new-todo', res.data);
+            }
+
+            // ✅ Reset todo fields
+            setTodoData({
+                title: '',
+                description: '',
+                status: '',
+                priority: ''
+            });
+
+            setIsModalOpen(false);
+
         } catch (error) {
-          console.error("❌ Submission failed:", error.response?.data?.message || error.message);
-          alert("Submission failed!");
+            console.error("❌ Submission failed:", error.response?.data?.message || error.message);
+            alert("Submission failed!");
         }
-      };
-      
+    };
+
 
     return (
         <div className="p-4">
             <div className="flex justify-between items-center mb-6">
-                <div>
-                    <h1 className="text-2xl font-bold text-white">To Do List</h1>
-                </div>
                 <button
                     onClick={() => setIsModalOpen(true)}
                     className="flex items-center gap-2 bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded-md transition"

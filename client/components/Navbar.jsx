@@ -33,12 +33,12 @@ const Navbar = () => {
     useEffect(() => {
         axios
             .get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/getTodolist`
-            , {
-                headers: {
-                  Authorization: `Bearer ${localStorage.getItem('token')}`
-                },
-                withCredentials: true
-              })
+                , {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    },
+                    withCredentials: true
+                })
             .then((res) => setTasks(res.data))
             .catch((err) => console.error('Error fetching tasks:', err));
     }, []);
@@ -63,9 +63,9 @@ const Navbar = () => {
     }
 
     return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#706b6b] to-[#0A1F24] text-white">
+        <div className="min-h-screen flex flex-col  bg-gradient-to-br from-[#706b6b] to-[#0A1F24] text-white">
             {/* Navbar */}
-            <nav className="flex items-center justify-between px-4 py-3 border-b border-gray-700 relative">
+            <nav className="flex items-center sticky top-0 z-50 bg-[#0A1F24] shadow-md justify-between px-4 py-3 border-b border-gray-700 relative">
                 <div className="flex items-center gap-3">
                     <img src={bitlogo} alt="Logo" className="h-8 w-8" />
                     <span className="text-lg font-bold">YourApp</span>
@@ -99,13 +99,17 @@ const Navbar = () => {
 
             {/* Content Area */}
             <main className="flex-1 overflow-auto p-4">
-                <Todo  socket={socket.current} />
+                <Todo socket={socket.current} />
+                <div>
+                    <h1 className="text-2xl text-center font-bold text-white">To Do List</h1>
+                </div>
 
                 {/* Kanban Columns */}
                 <div className="flex gap-4 mt-6">
                     {/* todo */}
                     <div className="flex-1 bg-white rounded-lg shadow-lg">
                         <div className="p-4 space-y-4">
+                            <h2 className="text-xl text-center font-semibold text-black mb-2">To Do</h2>
                             {getTasksByStatus('todo').map((task) => (
                                 <Card key={task._id} {...task} color="red" />
                             ))}
@@ -115,6 +119,7 @@ const Navbar = () => {
                     {/* in progress */}
                     <div className="flex-1 bg-white rounded-lg shadow-lg">
                         <div className="p-4 space-y-4">
+                            <h2 className="text-xl text-center font-semibold text-black mb-2">In Progress</h2>
                             {getTasksByStatus('in Progress').map((task) => (
                                 <Card key={task._id} {...task} color="yellow" />
                             ))}
@@ -125,6 +130,7 @@ const Navbar = () => {
                     <div className="flex-1 bg-white rounded-lg shadow-lg">
 
                         <div className="p-4 space-y-4">
+                            <h2 className="text-xl text-center font-semibold text-black mb-2">Done</h2>
                             {getTasksByStatus('done').map((task) => (
                                 <Card key={task._id} {...task} color="green" />
                             ))}
