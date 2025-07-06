@@ -10,10 +10,26 @@ const userSchema = new mongoose.Schema({
 
 // ✅ 2. Todo Schema
 const todoSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  status: String,
-  priority: String,
+  title: {
+    type: String,
+    required: [true, 'Title is required'],
+    minlength: [3, 'Title must be at least 3 characters']
+  },
+  description: {
+    type: String,
+    maxlength: [500, 'Description must not exceed 500 characters'],
+    default: ''
+  },
+  status: {
+    type: String,
+    enum: ['todo', 'in Progress', 'done'],
+    default: 'todo'
+  },
+  priority: {
+    type: String,
+    enum: ['low', 'medium', 'high'],
+    default: 'medium'
+  },
 }, { timestamps: true });
 
 // ✅ 3. Model Definitions

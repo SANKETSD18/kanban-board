@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
@@ -28,14 +29,16 @@ const LoginForm = () => {
       localStorage.setItem('email', res.data.user.email);
 
       // console.log("🔄 login :", localStorage.getItem("token"));
+      toast.success('Login  successful!');
       navigate('/addTodo');
       setEmail('');
       setPassword('');
 
 
     } catch (error) {
-      console.error("❌ Login failed:", error.response?.data?.message || error.message);
-      alert("Login failed!");
+      // console.error("❌ Login failed:", error.response?.data?.message || error.message);
+      // alert("Login failed!");
+      toast.error(error.response?.data?.message || 'Registration failed!');
     }
   };
 
@@ -46,24 +49,26 @@ const LoginForm = () => {
     // console.log("🟡 Registration attempt with:", { email, password, name });
 
     // const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, {
-    const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, {
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, {
+        name,
+        email,
+        password,
+      });
 
-      name,
-      email,
-      password,
-    });
-    setIsRegister(false);
-    setEmail('');
-    setPassword('');
-    setName('');
+      toast.success('Registration successful! Please login.');
+      setIsRegister(false);
+      setEmail('');
+      setPassword('');
+      setName('');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Registration failed!');
+    }
 
   };
 
   return (
-    // <div className="h-screen w-screen bg-gradient-to-br from-[#2B0A3D] to-[#0A1F24] flex items-center justify-center overflow-hidden">
     <div className="h-screen w-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700   flex items-center justify-center overflow-hidden">
-
-      {/* <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm"> */}
       <div className="bbackdrop-blur-md bg-white/10 border border-white/20 shadow-xl rounded-xl p-8 w-full max-w-sm">
 
         <h2 className="text-2xl font-bold text-center text-white mb-6">

@@ -80,6 +80,70 @@ export const createTodo = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+// delete todo
+export const deleteTodo = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedTodo = await Todo.findByIdAndDelete(id);
+
+    if (!deletedTodo) {
+      return res.status(404).json({ message: 'Todo not found' });
+    }
+
+    // 🔊 Emit delete event
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('delete-todo', id);
+    }
+
+    res.status(200).json({ message: 'Todo deleted successfully', id });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//updatetodo ya edit todo route
+export const updateTodo = async (req, res) => {
+  const { id } = req.params;
+  const { title, description, status, priority } = req.body;
+
+  try {
+    const updatedTodo = await Todo.findByIdAndUpdate(
+      id,
+      { title, description, status, priority },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedTodo) {
+      return res.status(404).json({ message: 'Todo not found' });
+    }
+
+    // 🔊 Emit update event
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('update-todo', updatedTodo);
+    }
+
+    res.status(200).json(updatedTodo);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Get All Events
 export const getAllTodos = async (req, res) => {
   try {

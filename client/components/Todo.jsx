@@ -1,8 +1,13 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
+
 import { FaPlus, FaTimes } from 'react-icons/fa';
 
-const Todo = ({ socket }) => {
+const Todo = ({ socket, editTask, setEditTask }) => {
+    const [isEditing, setIsEditing] = useState(false);
+    const [editTaskId, setEditTaskId] = useState(null);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const [todoData, setTodoData] = useState({
@@ -21,42 +26,79 @@ const Todo = ({ socket }) => {
         }));
     };
 
+    useEffect(() => {
+        if (editTask) {
+            setTodoData({
+                title: editTask.title,
+                description: editTask.description,
+                status: editTask.status,
+                priority: editTask.priority
+            });
+            setEditTaskId(editTask._id);
+            setIsEditing(true);
+            setIsModalOpen(true);
+        }
+    }, [editTask]);
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const localToken = localStorage.getItem("token");
-        // console.log("🧾 Token during submit:", localToken);
+        console.log("🧾 Token during submit:", localToken);
 
         if (!localToken) {
-            alert("❌ Please login again.");
+            toast.error("Please login again!");
+            // alert("❌ Please login again.");
             return;
         }
-
         try {
-            const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/addtodolist`, todoData, {
-                headers: {
-                    Authorization: `Bearer ${localToken}`,
-                },
-                withCredentials: true,
-            });
+            if (isEditing) {
+                // ✅ Update existing todo
+                const res = await axios.put(
+                    `${import.meta.env.VITE_API_BASE_URL}/api/auth/updatetodo/${editTaskId}`,
+                    todoData,
+                    {
+                        headers: { Authorization: `Bearer ${localToken}` },
+                        withCredentials: true
+                    }
+                );
+                if (socket) {
+                    socket.emit('update-todo', res.data);
+                }
+                toast.success("✅ Todo updated");
+            } else {
+                // 🆕 Add new todo
+                const res = await axios.post(
+                    `${import.meta.env.VITE_API_BASE_URL}/api/auth/addtodolist`,
+                    todoData,
+                    {
+                        headers: { Authorization: `Bearer ${localToken}` },
+                        withCredentials: true
+                    }
+                );
 
-            if (socket) {
-                socket.emit('new-todo', res.data);
+                if (socket) {
+                    socket.emit('new-todo', res.data);
+                }
+                toast.success("✅ Todo added");
             }
 
-            // ✅ Reset todo fields
+            // 🧹 Reset all states
             setTodoData({
                 title: '',
                 description: '',
                 status: '',
                 priority: ''
             });
-
             setIsModalOpen(false);
+            setIsEditing(false);
+            setEditTaskId(null);
+            setEditTask(null);
 
-        } catch (error) {
-            console.error("❌ Submission failed:", error.response?.data?.message || error.message);
-            alert("Submission failed!");
+        } catch (err) {
+            const backendMessage = err.response?.data?.message || err.message;
+            toast.error(backendMessage);
         }
     };
 
@@ -77,7 +119,12 @@ const Todo = ({ socket }) => {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-gradient-to-br from-[#1e1e2f] to-[#0A1F24] p-6 rounded-lg w-full max-w-md relative">
                         <button
-                            onClick={() => setIsModalOpen(false)}
+                            onClick={() => {
+                                        setIsModalOpen(false);
+                                        setEditTask(null);
+                                        setIsEditing(false);
+                                        setEditTaskId(null);
+                                    }}
                             className="absolute top-4 right-4 text-gray-400 hover:text-white"
                         >
                             <FaTimes />
@@ -144,23 +191,25 @@ const Todo = ({ socket }) => {
                             <div className="mt-6 flex justify-end gap-3">
                                 <button
                                     type="button"
-                                    onClick={() => setIsModalOpen(false)}
+                                    onClick={() => {
+                                        setIsModalOpen(false);
+                                        setEditTask(null);
+                                        setIsEditing(false);
+                                        setEditTaskId(null);
+                                    }}
                                     className="px-4 py-2 border border-gray-600 text-gray-300 rounded-md hover:bg-gray-700 transition"
                                 >
                                     Cancel
                                 </button>
-                                <button
-                                    type="submit"
-                                    className="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 transition"
-                                >
-                                    Add To Do
+                                <button type="submit" className="px-4 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 transition">
+                                    {isEditing ? "Update To Do" : "Add To Do"}
                                 </button>
                             </div>
                         </form>
                     </div>
-                </div>
+                </div >
             )}
-        </div>
+        </div >
     );
 };
 
