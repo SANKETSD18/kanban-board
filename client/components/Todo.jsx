@@ -45,7 +45,7 @@ const Todo = ({ socket, editTask, setEditTask }) => {
         e.preventDefault();
 
         const localToken = localStorage.getItem("token");
-        console.log("🧾 Token during submit:", localToken);
+        // console.log("🧾 Token during submit:", localToken);
 
         if (!localToken) {
             toast.error("Please login again!");
