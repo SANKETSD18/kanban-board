@@ -14,7 +14,7 @@ const server = http.createServer(app);
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://your-deployed-frontend-url.com'
+  'https://kanban-board-lemon-six.vercel.app'
 ];
 
 const io = new Server(server, {
