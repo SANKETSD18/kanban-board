@@ -120,11 +120,17 @@ const Todo = ({ socket, editTask, setEditTask }) => {
                     <div className="bg-gradient-to-br from-[#1e1e2f] to-[#0A1F24] p-6 rounded-lg w-full max-w-md relative">
                         <button
                             onClick={() => {
-                                        setIsModalOpen(false);
-                                        setEditTask(null);
-                                        setIsEditing(false);
-                                        setEditTaskId(null);
-                                    }}
+                                setIsModalOpen(false);
+                                setEditTask(null);
+                                setIsEditing(false);
+                                setEditTaskId(null);
+                                setTodoData({                    // ✅ Reset form fields here
+                                    title: '',
+                                    description: '',
+                                    status: '',
+                                    priority: ''
+                                });
+                            }}
                             className="absolute top-4 right-4 text-gray-400 hover:text-white"
                         >
                             <FaTimes />
@@ -196,6 +202,12 @@ const Todo = ({ socket, editTask, setEditTask }) => {
                                         setEditTask(null);
                                         setIsEditing(false);
                                         setEditTaskId(null);
+                                        setTodoData({                    // ✅ Reset form fields here
+                                            title: '',
+                                            description: '',
+                                            status: '',
+                                            priority: ''
+                                        });
                                     }}
                                     className="px-4 py-2 border border-gray-600 text-gray-300 rounded-md hover:bg-gray-700 transition"
                                 >

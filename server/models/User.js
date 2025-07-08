@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs'; // bcrypt not used here, but okay if needed elsewhere
+
 
 // ✅ 1. User Schema
 const userSchema = new mongoose.Schema({
@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   password: { type: String, required: true }
 });
+
 
 // ✅ 2. Todo Schema
 const todoSchema = new mongoose.Schema({

@@ -78,7 +78,7 @@ const LoginForm = () => {
         <form className="space-y-5" onSubmit={isRegister ? handleRegister : handleLogin}>
           {isRegister && (
             <div>
-              <label className="block text-sm text-gray-700 mb-1">Name</label>
+              <label className="block text-sm text-gray-200 mb-1">Name</label>
               <input
                 type="text"
                 placeholder="Enter Your Name"
@@ -90,7 +90,7 @@ const LoginForm = () => {
             </div>
           )}
           <div>
-            <label className="block text-sm text-gray-700 mb-1">Enter Your email</label>
+            <label className="block text-sm text-gray-200 mb-1">Enter Your email</label>
             <input
               type="text"
               placeholder="Enter email"
@@ -102,7 +102,7 @@ const LoginForm = () => {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-700 mb-1">Password</label>
+            <label className="block text-sm text-gray-200 mb-1">Password</label>
             <input
               type="password"
               placeholder="Enter password"
@@ -125,7 +125,12 @@ const LoginForm = () => {
         <p className="mt-4 text-center text-sm text-white">
           {isRegister ? 'Already have an account?' : 'New user?'}{' '}
           <button
-            onClick={() => setIsRegister(!isRegister)}
+            onClick={() => {
+              setIsRegister(!isRegister);
+              setName('');
+              setEmail('');
+              setPassword('');
+            }}
             className="p-2 ml-1 rounded-md text-white font-semibold bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
           >
             {isRegister ? 'Login here' : 'Register here'}
