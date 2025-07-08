@@ -14,7 +14,8 @@ const server = http.createServer(app);
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://kanban-board-lemon-six.vercel.app'
+  'https://kanban-board-lemon-six.vercel.app',
+  'https://kanban-board-16aer86vn-ichigo.vercel.app'
 ];
 
 const io = new Server(server, {
